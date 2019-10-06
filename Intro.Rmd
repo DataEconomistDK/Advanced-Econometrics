@@ -1,0 +1,249 @@
+---
+title: "Intro"
+author: "Mathias Flinta"
+date: "10/5/2019"
+output:
+  html_document: 
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_folding: hide
+    number_sections: TRUE
+---
+
+# Intro
+
+The purpose of these notes is to form all prerequisites for the course Advanced econometrics. Below is the complete list:
+
+* Order conditions 1th, 2th, 3th. 
+* Linear algebra
+* Eigenvalues and eigenvectors
+* Polynial (unity circle)
+
+# Tips and tricks for markdown
+
+Links:
+<http://www.rstudio.com> [link](www.rstudio.com)
+
+Internal doc links: Jump to [Header 1](#anchor)
+
+Images:
+
+* unordered list 
+  + sub-item 1 
+  + sub-item 2
+    - sub-sub-item 1
+* item 2
+Continued (indent 4 spaces)
+
+1. ordered list 2. item 2
+i) sub-item 1
+A. sub-sub-item 1
+
+(@) A list whose numbering 
+continues after
+(@) an interruption
+
+Common text commands:
+Alt+i: |
+Alt+=: ≠
+
+*Text italic style*
+**Text bold style**
+_Text italic_
+__Text bold__
+
+In line code: 
+`x<-10` 
+
+# Linear algebra
+
+The info is based on:
+
+Datacamp kursus: https://campus.datacamp.com/courses/linear-algebra-for-data-science-in-r/matrix-vector-equations?ex=15 
+
+khanacademy: https://www.khanacademy.org/math/precalculus/precalc-matrices/representing-systems-with-matrices/a/representing-systems-with-matrices?modal=1
+
+matrixkursus: http://chortle.ccsu.edu/vectorlessons/vmch13/vmch13_19.html 
+
+Dansk r/matrix kursus: https://www.math.uh.edu/~jmorgan/Math6397/day13/LinearAlgebraR-Handout.pdf
+
+Youtube channel series on linear algebra: https://www.youtube.com/watch?v=kjBOesZCoqc&t=1s
+
+## Vectors
+
+Vectors can be seen as a list of numbers, a direction(arrow) in space. 
+
+In linear algebra the vectors are always rooted in the origin. Origin is the center of space(axis). 
+
+In a vector the 1. value is the movement in the (x) axis, 2. value is the movement in the (y) axis, the 3. value is the movement in the (z) axis and ect. for more dimensions.  
+
+$\begin{bmatrix} -2 \\ 3 \end{bmatrix}$
+
+Positive values are a movement to the right and negatives a movement to the left for x-values. For y positive is up, and negative is down. 
+
+The sum of 2 vectors, is just to add them together. As vectors can be interpreted as movents, we add the 2 movements together. 
+
+$\begin{bmatrix} 1 \\ 2 \end{bmatrix}+ \begin{bmatrix} 3 \\ -1 \end{bmatrix} = \begin{bmatrix} 4 \\ 1 \end{bmatrix}$
+
+As you can see from above we just add the numbers in the same dimensions together. 
+
+Vectors can also be multiplied by a number/scalar. Here we just scale/stretch the vector by a number. For a negative, we flip it and then scale it. 
+
+$2 * \begin{bmatrix} 1 \\ 2 \end{bmatrix}= \begin{bmatrix} 2 \\ 4 \end{bmatrix}$
+
+### Basis vectors:
+It can be nice to think about vector values as scalars stretching out the **basis vectors**. With $\hat{i}$ being the basis vector for the **x axis** having the value +1 pointing right, and $\hat{j}$ being the basis cector for the **y axis** having the value +1 pointing up. This implies that we can choose different basis vectors and thereby creating different coordinate systems. When we describe vectors numerically, we implicitly assume some coordinator system. 
+
+The **span** of two(in 2D) given pairs of vectors, is the set of all their linear combinations. If both pairs of vectors can move, every point in the coordinat system can be reached (span is the whole space). If both vectors are pointing in the same direction it becomes 1 line. If both vectors are in the center it becomes a point. If we fix one scalar, then the other one can only move in a straight line. In these cases where 1 vectors is redundant eg. does not affect **span**, we say it's **linearly dependent**. The vector can then be expressed as a linear combination of the other vector. If the vector is not redundant, then we say it's **linearly independent**. 
+
+When dealing with a lot of vectors it can be usefull to imagine the vectors as a point which is the end/tip of the vector. Instead of a line from the origin. 
+
+## Linear transformation
+Transformation can here be understood as function (takes input and gives output). In this way the transformation moves the input vector to the output vector, which it does by moving all of space around. Linear transformations can turn and stretch space out, but must keep origin in place, and grid lines parralel and equally spaced. 
+
+### Addition
+Can only be added if they have exactly the same size. 
+
+$a=\begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} &\end{pmatrix}$
+
+$b=\begin{pmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} &\end{pmatrix}$
+
+$a+b=a=\begin{pmatrix} a_{11}+b_{11} & a_{12}+b_{12} \\ a_{21}+b_{21} & a_{22}+b_{22} &\end{pmatrix}$
+
+This makes sense as addition is the 2 movements combined together. 
+
+Example: 
+
+Scalar multiplaction:
+Is a constant times a vektor. 
+$\gamma a=\gamma\begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} &\end{pmatrix}$
+
+$\gamma a=\begin{pmatrix} \gamma a_{11} & \gamma a_{12} \\ \gamma a_{21} & \gamma a_{22} &\end{pmatrix}$
+
+This makes sense as the "scalar" stretches the vektor in or out, making it longer or shorter. 
+
+
+## What is a matrix?
+Matrix can be seen as a storage of data. This data can then represent 
+Matrix can be seen as a linear transformation aka. changing existing vectors, objects ect. 
+
+- En matrix er et s?t af tal, sat sammen i et s?t af rows og columns.
+
+- Matrix skrives p? denne form: rows x columns.
+
+- Each number is called a element and have a specific location. 
+
+- Column or row matrixes (N x 1 or 1 x N) represents vectors. 
+
+Matrix: 
+$A_{m,n} = \begin{pmatrix} a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\ a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\ \vdots  & \vdots  & \ddots & \vdots  \\ a_{m,1} & a_{m,2} & \cdots & a_{m,n} \end{pmatrix}$
+
+
+A 2x2 matrix can be interpreted as where $\hat{i}$ and $\hat{j}$ lands. 
+
+### Augmented Matrix and operations rules
+A system of equations can be represented by an augmented matrix. 
+Here each row represents one equation, and each column represent a variable or constant. 
+
+Row operations:
+Switch any 2 rows
+Multiply a row by a nonzero constant.
+Add one row to another. We can do this because of the following rule:
+If A=B and C=D, then A+C=B+D, which is the same as adding rows. But remember not to remove any rows, we just add!!!
+
+When solving this by hand, we use these operations in combination to make the variables (left hand side) become a form where they only have values in the diagonal, resulting in them equaling the constants (right hand side). 
+
+### Multiplication of a matrix by a scalar
+Scalar multiplicated by a matrix, is done on each individual element. It is the same at stretchin/scaling a vector or object. 
+
+```{r}
+Vector1 <- c(1,-2,0,4) # define vector
+A <- matrix(Vector1, 2,2, byrow = TRUE) # make matrix
+A*2
+```
+
+### Transposing a matrix/vector
+Transposing of a matrix is a new matrix whose rows are the columns of the original, and the columns become rows. Another to look it is that element $a_{rc}$ becomes $a_{cr}$ in the transposed matrix. 
+```{r}
+t(A)
+```
+
+### Multiplication of a matrix and a vector
+Matrix vector equation: (Ax = B)
+No solution(inconsistent): Visualized by 2 lines being parallel. 
+1 solution(consistent): Visualized by 2 lines intersecting one time. 
+Infinit solutions: Visualized by 2 lines being the same, therefore intersecting infinitly. 
+
+Property to ensure a unique solution: 
+The matrix A must have an inverse
+The determinant of A is nonzero. 
+The rows and colums of A form a basis for the set of all vectors with n elements (something to do with basis vectors have a unique solution).
+
+```{r}
+A
+Ainv <- solve(A) # solving finds the inverse if it exists (can only be sqaure matrixes, but not all), are unique. 
+Ainv
+Ainv %*% A # Invirse A times A is the I(identity) matrix. 
+
+det(A) # finding the determinant
+```
+
+Solving is as simple as multiplying both sides of the equation by A's inverse. 
+
+If we have more equations than unknowns, then one equation should be abundant so we can combine them to solve. 
+
+Some options for non-square matrices:
+Row reduction (by hand, difficult for big problems)
+OLS (if more rows than columns), many observations and few variables. 
+Singular value decompositions (of more columns than rows - used in principal component analysis)
+Generalized or pseudo-inverse. 
+
+### Matrix multiplication
+
+```{r}
+Vector2 <- c(3,-4,1,0) # define vector
+B <- matrix(Vector2, 2,2, byrow = TRUE) # make matrix
+
+# Inner product
+A*B
+# Matrix multiplication
+A%*%B
+```
+
+matrixes can be multiplied together if: 
+The inner dimensions match: ex. 2x3 times 3x3, or 4x3 times 3x1. 
+The dimensions then become the outher dimensions: ex. 2x3, or 4x1.
+
+### Extra 
+Diagonal 
+```{r}
+A
+diag(A) # takes the diagonal
+```
+
+
+
+
+# Eigenvectors and Eigenvalues
+
+Link: https://www.youtube.com/watch?v=PFDu9oVAE-g (3Blue1Brown) vizualized. 
+
+Eigenvalues and Eigenvectors come in pairs. 
+
+When linear transformations happens, then most vectors get's knocked of their initial span (meaning: the line passing through it's origin and the "tip" of the vector). After the transformation they will have a new span and they might have been scaled/stretched. 
+
+Some values don't get knocked of their span, but are only scaled, just as with scalar products. These vectors are called eigenvectors. Eigenvalues are the value describing the factor whereby a linear transformation scale/stretch. 
+
+Can be negative and positive. Negative meaning that it get's flipped. 
+
+For a linear transformation in 3D, the eigenvector would be the axis of rotation. 
+
+A: transformation matrix 
+$\lambda$: Eigenvalue
+$\overrightarrow{v}$: Eigenvector
+
+$A \overrightarrow{v} = \lambda \overrightarrow{v}$
+
+We see that the matrix-vector multiplication gives the same as a scalar multiplication. 
+
