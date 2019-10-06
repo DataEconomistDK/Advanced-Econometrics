@@ -102,6 +102,56 @@ When dealing with a lot of vectors it can be usefull to imagine the vectors as a
 ## Linear transformation
 Transformation can here be understood as function (takes input and gives output). In this way the transformation moves the input vector to the output vector, which it does by moving all of space around. Linear transformations can turn and stretch space out, but must keep origin in place, and grid lines parralel and equally spaced. 
 
+To transform space and get information about how every object is transformed, we only need information about how the basis vectors are transformed. 
+
+Consider the vectors:
+$\overrightarrow{v} = -1 \hat{i} + 2 \hat{j}$
+Then after transforming. V will land $-1$ times where $\hat{i}$ landed, plus $2$ times where $\hat{j}$ landed. 
+
+For this transformation $\hat{i}$ landed at $\begin{bmatrix} 1 \\ -2 \end{bmatrix}$ and $\hat{j}$ landed at $\begin{bmatrix} 3 \\ 0 \end{bmatrix}$. 
+This means that $\overrightarrow{v}$ lands at:
+$-1 \begin{bmatrix} 1 \\ -2 \end{bmatrix} +2 \begin{bmatrix} 3 \\ 0 \end{bmatrix} = \begin{bmatrix} -1(1)+2(3) \\ -1(-2)+2(0) \end{bmatrix} = \begin{bmatrix} 5 \\ 2 \end{bmatrix}$.
+
+In general we can write:
+
+$x \begin{bmatrix} a \\ c \end{bmatrix} + y \begin{bmatrix} b \\ d \end{bmatrix} = \begin{bmatrix} ax + by \\ cx + dy \end{bmatrix}$
+
+Calculating this in R:
+```{r}
+i_hat <- c(1,-2) #Coordinates for where i hat lands. 
+j_hat <- c(3,0) #Coordinates for where j hat lands. 
+x <- -1 
+y <- 2
+result <- x*i_hat+y*j_hat
+result
+```
+
+The $\hat{i}$ and $\hat{j}$ can be interpreted as a 2x2 matrix describing a linear transformation. Then you you a given a vector as in this case $\begin{bmatrix} -1x \\ 2y \end{bmatrix}$, and then you can use the above calculation to find where it lands. For some other vector we recalculate where the vector lands. 
+
+90 degree rotation counter clockwise
+```{r}
+i_hat <- c(0,1) #Coordinates for where i hat lands. 
+j_hat <- c(-1,0) #Coordinates for where j hat lands. 
+x <- 1
+y <- 1
+result <- x*i_hat+y*j_hat
+result
+```
+
+Shear transformation. 
+```{r}
+i_hat <- c(1,0) #Coordinates for where i hat lands. 
+j_hat <- c(1,1) #Coordinates for where j hat lands. 
+x <- 1
+y <- 1
+result <- x*i_hat+y*j_hat
+result
+```
+
+
+$\begin{bmatrix} 1 \\ 2 \end{bmatrix}$
+
+
 ### Addition
 Can only be added if they have exactly the same size. 
 
@@ -138,9 +188,6 @@ Matrix can be seen as a linear transformation aka. changing existing vectors, ob
 
 Matrix: 
 $A_{m,n} = \begin{pmatrix} a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\ a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\ \vdots  & \vdots  & \ddots & \vdots  \\ a_{m,1} & a_{m,2} & \cdots & a_{m,n} \end{pmatrix}$
-
-
-A 2x2 matrix can be interpreted as where $\hat{i}$ and $\hat{j}$ lands. 
 
 ### Augmented Matrix and operations rules
 A system of equations can be represented by an augmented matrix. 
