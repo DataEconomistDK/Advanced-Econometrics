@@ -431,6 +431,49 @@ Equations that relates the current output with previous outputs in discrete time
 
 First order: Means that only the first derivative of y appears, and no higher order derivatives. 
 
+# Difference equations
+
+In the most general form a difference equation: "expresses the value of a variable as a function of its own lagged values, time, and other variables.". time-series econometrics is concerned with the estimation of difference equations containing stochastic components. 
+
+t denotes time. 
+h denotes length of time period. 
+n denotes the order of the difference. 
+x denotes the forcing process. 
+Difference equations is just the diff() between period. First order is diff applied once, second order diff is applied twice and ect. We mostly only use first order, and then some times second order. 
+
+- **The random walk hypothesis:** In its simplest form, the random walk model suggests that day-to-day changes in the price of a stock should have a mean value of zero. This means that the price of a stock develops based on a single random element, with a expected mean of 0. 
+
+- **Reduced-Forms and Structural Equations:** 
+Collapsing a system of difference equations into seperate single-equation models. 
+
+A structural equation expresses a endogenous variable, being dependent on the current realization of another endogenous variable. Therefore it cannot be determined yet, and we want to turn it into a reduced form equation by substituting and ect. 
+
+A reduced-form equation is one expressing the value of a variable in terms of its own lags, lags of other endogenous vari- ables, current and past values of exogenous variables, and disturbance terms. Therefore the reduced form can be determined. 
+
+## Solving difference equations 
+A solution to a difference equation expresses the value of $y_t$ as a function of the elements of the {$x_t$} sequence and t (and possibly some given values of the {$y_t$} sequence called initial conditions), but it most not be it own lags. Therefore a reduced-form equation is not a solution. So the solution is an equation not a number. The solution does not need to be unique. 
+
+If you need to solve equations manually there is several ways:
+
+Solve by iteration with starting conditions(only for simple equations). 
+Solve by iteration without starting conditions (only for simple equations).
+The alternative method as below
+
+A equation is homogenous if it can be written in the following form (for a first order): 
+
+$\frac{dy}{dx}=F(\frac{y}{x})$ in the book the example is: $y_t = a_1 y_{t-1}$ (1.27)
+
+The solution to this homogeneous equation is called the homogeneous solution. At times it will be useful to denote the homogeneous solution by the expression $y_t^h$. Obviously, the trivial solution $y_t$ = $y_{t-1}$ = · · · = 0 satisfies (1.27). However, this solution is
+not unique. By setting $a_0$ and all values of {$\varepsilon_t$} equal to zero, (1.18) becomes $y_t = a_1^t y_0$. Hence, $y_t = a_1^t y_0$ must be a solution to (1.27). Yet, even this solution does not constitute the full set of solutions.
+
+Equation (1.21) is called a particular solution to the difference equation; all such particular solutions will be denoted by the term $y_t^p$. The term “particular” stems from the fact that a solution to a difference equation may not be unique; hence, (1.21) is just one particular solution out of the many possibilities.
+
+In moving to (1.22) you verified that the particular solution was not unique. The homogeneous solution $Aa_1^t$ plus the particular solution given by (1.21) constituted the complete solution to (1.17). **The general solution** to a difference equation is defined to be a particular solution plus all homogeneous solutions. Once the general solution is obtained, the arbitrary constant A can be eliminated by imposing an initial condition for $y_0$.
+
+STEP 1: form the homogeneous equation and find all n homogeneous solutions; STEP 2: find a particular solution;
+STEP 3: obtain the general solution as the sum of the particular solution and a linear combination of all homogeneous solutions;
+STEP 4: eliminate the arbitrary constant(s) by imposing the initial condition(s) on the general solutio
+
 # Stationarity and non-stationarity 
 
 Often dynamic models are in discrete time, years, months, ect. And therefore often consist of relationsship among variables at different points in time, f. ex. it own lags. 
@@ -637,7 +680,7 @@ Consider a AR (autoregressive model), which is a stochastic (random) first order
 
 $y_t = \alpha + \phi_1 y_{t-1} + \varepsilon_t$
 
-If the absolute value of $\phi_1 y_{t-1}$ is smaller than 1, then the dynamic properties of the model is stable/stationary. If it's equal to 1, then the model is a random walk model, characterized by a stochastic trend and termed non-stationary. If it's bigger than 1, then the model is non-stationary and explosive, and might be oscillatory. 
+If the absolute value of $\phi_1 y_{t-1}$ is smaller than 1, then the dynamic properties of the model is stable/stationary. If it's equal to 1, then the model is a random walk model, characterized by a stochastic trend and termed non-stationary. If it's bigger than 1 or smaller than -1, then the model is non-stationary and explosive, and might be oscillatory. It's also oscillaratory between 0 and -1, but not explosive. 
 This is less obvious beyond simple AR models like the one above, but it can be analyzed in a different way, which will be done later. 
 
 Here we see a mean centered version: 
@@ -762,6 +805,165 @@ Sarima includes the following:
 
 - 4. Q-statistic p-values (most point should be above the blue line. This shows if the noise is white.)
 
+## Arima (Integrated ARMA)
+
+A time series exhibits ARIMA behavior if the differenced data has ARMA behavior. 
+
+Here i make an example with forecast. 
+```{r}
+y <- arima.sim(model = list(order(1,1,0), ar = 0.9), n = 120)
+x <- y[1:100]
+
+# Plot P/ACF pair of differenced data 
+acf2(diff(y))
+
+# Fit model - check t-table and diagnostics
+sarima(x, 1,1,0)
+
+# Forecast the data 20 time periods ahead
+sarima.for(x, n.ahead = 20, p = 1, d = 1, q = 0) 
+lines(y)  
+```
+
+## Pure seasonal models
+
+s: denotes the seasonal period. 
+
+So a SAR(p=1), s =12, means that we have a AR model with lag one after a period of 12 (the seasons). So in that perspective it's all the same, also in regards to noise and ACF and PACF. 
+
+Pure seasonal models rarely occurs, so therefore mixed models are often a better fit. 
+
+## Mixed seasonal model
+
+Here we have both cases in one model. So correlation at the lags and the seasonal lags.
+
+Here i fit a model on the data, one standard ARIMA, and then a mixed seasonal ARIMA. 
+
+```{r}
+# Fit ARIMA(2,1,0) to chicken - not so good
+sarima(chicken, 2, 1, 0)
+
+# Fit SARIMA(2,1,0,1,0,0,12) to chicken - that works
+sarima(chicken, 2, 1, 0, 1, 0 , 0, 12)
+```
+
+Another case with forecast aswell. 
+```{r}
+# Fit your previous model to unemp and check the diagnostics
+sarima(unemp, 2, 1, 0, 0, 1, 1, 12)
+
+# Forecast the data 3 years into the future
+sarima.for(unemp, 36, 2, 1, 0, 0, 1, 1, 12)
+```
+
+
+## Xts and zoo timeseries data
+
+about xts and zoo
+
+Lagg indication is opposite in xts from zoo and base r. 
+xts: 1 is lag, -1 is ahead. (correct in terms of litterature)
+r/zoo: -1 is lag, 1 is ahead. (because of r historical reasons)
+(test this out!!!)
+
+We can use 
+diff(AirPass, lag = 12, differences = 1), to make a diff of 12 lags. 
+
+period.apply() to apply function by period. 
+```{r}
+# Calculate the weekly endpoints
+ep <- endpoints(temps, on = "weeks")
+
+# Now calculate the weekly mean and display the results
+period.apply(temps[, "Temp.Mean"], INDEX = ep, FUN = mean)
+```
+
+
+endpoints(temps, on = "week", k = 2) finds the last obs. in each year and returns the indexes. It start's with index 0 instead of 1 as in base r. 
+Note: that the last value returned will always be the length of your input data, even if it doesn't correspond to a skipped interval.
+
+
+split() split into chuncks in time
+```{r}
+# Split temps by week
+temps_weekly <- split(temps, f = "weeks")
+
+# Create a list of weekly means, temps_avg, and print this list
+temps_avg <- lapply(X = temps_weekly, FUN = mean)
+temps_avg
+```
+
+
+Usefull commands. 
+
+rbind() or cbind() 
+```{r}
+
+```
+
+Below command can be used to aggregate data based on some period. 
+to.period(x,
+          period = "months", 
+          k = 1, 
+          indexAt, 
+          name=NULL,
+          OHLC = TRUE,
+          ...)
+          
+Rolling:
+On discrete or continous variables. 
+
+Example with rolling cumulative sum on financial data: 
+
+```{r}
+# Split edhec into years
+edhec_years <- split(edhec , f = "years")
+
+# Use lapply to calculate the cumsum for each year in edhec_years
+edhec_ytd <- lapply(edhec_years, FUN = cumsum)
+
+# Use do.call to rbind the results
+edhec_xts <- do.call(rbind, edhec_ytd)
+```
+
+Note the last call uses R's somewhat strange do.call(rbind, ...) syntax, which allows you to pass a list to rbind instead of passing each object one at a time. This is a handy shortcut for your R toolkit.
+
+You can also use rollapply for continous rolling based on the number of observations (not time): 
+```{r}
+eq_sd <- rollapply(eq_mkt, width = 3, FUN = sd)
+```
+
+The index class using indexClass() (e.g. from Date to chron)
+The time zone using indexTZ() (e.g. from America/Chicago to Europe/London)
+The time format to be displayed via indexFormat() (e.g. YYYY-MM-DD), f. ex. "%b-%d-%Y"
+
+In general always set timezone when working with date objects, as some systems require them, and set a default timezone if not otherwise specified in the start (tzone(x) <- "Time_Zone"). 
+
+We can use the command periodicity() to calculate a summary of the periodicity, it can be roughly as we can have irregular timestamps in xts. 
+
+If you have a time series, it is now easy to see how many days, weeks or years your data contains. To do so, simply use the function ndays() and its shortcut functions nmonths(), nquarters(), and so forth, making counting irregular periods easy.
+
+xts uses a very special attribute called index to provide time support to your objects. For performance and design reasons, the index is stored in a special way. This means that regardless of the class of your index (e.g. Date or yearmon) everything internally looks the same to xts. The raw index is actually a simple vector of fractional seconds since the UNIX epoch.
+
+More useful than extracting raw seconds is the ability to extract time components similar to the POSIXlt class, which closely mirrors the underlying POSIX internal compiled structure tm. This functionality is provided by a handful of commands such as .indexday(), .indexmon(), .indexyear(), and more.
+
+Note this kind og index goes from 0 to last obs. And for days, sunday is 0 and saturday is 6. 
+```{r}
+# Create an index of weekend days using which()
+index <- which(.indexwday(temps) == 6 | .indexwday(temps) == 0)
+
+```
+
+Commands to drop duplicates, or round time:
+
+If you find that you have observations with identical timestamps, it might be useful to perturb or remove these times to allow for uniqueness. xts provides the function make.index.unique() for just this purpose. The eps argument, short for epsilon or small change, controls how much identical times should be perturbed, and drop = TRUE lets you just remove duplicate observations entirely.
+
+On other occasions you might find your timestamps a bit too precise. In these instances it might be better to round up to some fixed interval, for example an observation may occur at any point in an hour, but you want to record the latest as of the beginning of the next hour. For this situation, the align.time() command will do what you need, setting the n argument to the number of seconds you'd like to round to.
+```{r}
+make.index.unique(x, eps = 1e-4)  # Perturb
+make.index.unique(x, drop = TRUE) # Drop duplicates
+align.time(x, n = 60) # Round to the minute
+```
 
 
 
